@@ -158,11 +158,16 @@ Thank you!
       {/* NAVIGATION */}
       <header className="navbar">
         <a href="#home" className="brand">
-          <span className="brand-symbol">H</span>
-          <span className="brand-name">
-            HARISH REDDY
-            <small>ARTISAN SWEETS</small>
-          </span>
+       <span className="brand-symbol">H</span>
+
+<span className="brand-name">
+  G HARISH REDDY
+  <small>
+    SWEETS
+    <br />
+    A Legacy of Sweetness Since 1998
+  </small>
+</span>
         </a>
 
         <nav className="desktop-nav">
@@ -220,10 +225,13 @@ Thank you!
       <section className="hero" id="home" ref={heroRef}>
         <motion.div
           className="hero-image"
-          style={{
-            y: heroImageY,
-            backgroundImage: `url("${images.hero}")`,
-          }}
+         style={{
+  display: "grid",
+  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+  justifyContent: "center",
+  gap: "16px",
+  width: "100%",
+}}
         >
           <div className="hero-overlay" />
         </motion.div>
@@ -414,10 +422,9 @@ Thank you!
           className="product-grid"
           style={{
             display: "grid",
-            gridTemplateColumns:
-              "repeat(auto-fit, minmax(min(100%, 320px), 420px))",
+           gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
             justifyContent: "center",
-            gap: "32px",
+            gap: "12px",
             width: "100%",
           }}
         >
@@ -817,12 +824,11 @@ Thank you!
       {/* FOOTER */}
       <footer className="footer">
         <a href="#home" className="brand footer-brand">
-          <span className="brand-symbol">H</span>
-
           <span className="brand-name">
-            HARISH REDDY
-            <small>ARTISAN SWEETS</small>
-          </span>
+  G HARISH REDDY
+   SWEETS
+  <small>A Legacy of Sweetness Since 1998</small>
+</span>
         </a>
 
         <span>MADE WITH LOVE. ROOTED IN TRADITION.</span>
