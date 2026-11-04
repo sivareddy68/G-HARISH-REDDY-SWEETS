@@ -175,18 +175,30 @@ function CollectionContent() {
         </div>
 
         {/* SEARCH PRODUCTS */}
-        <div className="mx-auto mb-10 max-w-xl">
-          <div className="flex items-center gap-3 rounded-full border border-[#d9c7aa] bg-white px-5 py-3 shadow-sm transition focus-within:border-[#a77b3d] focus-within:shadow-md">
+        <div className="mx-auto mb-12 max-w-2xl text-center">
 
-            <Search size={20} className="shrink-0 text-[#a77b3d]" />
+          <p className="mb-2 text-xs font-semibold tracking-[0.3em] text-[#a77b3d]">
+            FIND YOUR FAVOURITE
+          </p>
+
+          <h3 className="mb-5 font-serif text-2xl font-bold text-[#501522] md:text-3xl">
+            Search Our {selectedCategory}
+          </h3>
+
+          <div className="group flex items-center gap-3 rounded-full border border-[#d6ad65] bg-white px-5 py-4 shadow-[0_4px_18px_rgba(80,21,34,0.06)] transition duration-300 focus-within:border-[#a77b3d] focus-within:shadow-[0_5px_22px_rgba(80,21,34,0.12)]">
+
+            <Search
+              size={21}
+              className="shrink-0 text-[#a77b3d]"
+            />
 
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder={`Search ${selectedCategory} sweets...`}
+              placeholder="Enter sweet name..."
               aria-label={`Search ${selectedCategory} products`}
-              className="w-full bg-transparent text-sm text-[#501522] outline-none placeholder:text-[#a39482]"
+              className="w-full bg-transparent text-base text-[#501522] outline-none placeholder:text-[#a39482]"
             />
 
             {searchTerm && (
@@ -194,7 +206,7 @@ function CollectionContent() {
                 type="button"
                 onClick={() => setSearchTerm("")}
                 aria-label="Clear search"
-                className="shrink-0 text-[#927e68] transition hover:text-[#501522]"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#927e68] transition hover:bg-[#f8f3e9] hover:text-[#501522]"
               >
                 <X size={19} />
               </button>
@@ -202,11 +214,12 @@ function CollectionContent() {
 
           </div>
 
-          {searchTerm && (
-            <p className="mt-3 text-center text-sm text-[#77695d]">
-              {filteredProducts.length} product(s) found
+          {searchTerm.trim() && (
+            <p className="mt-3 text-xs tracking-wide text-[#927e68]">
+              {filteredProducts.length} {filteredProducts.length === 1 ? "sweet" : "sweets"} found
             </p>
           )}
+
         </div>
 
         {categoryProducts.length === 0 ? (
