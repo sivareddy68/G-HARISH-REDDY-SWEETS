@@ -1,10 +1,16 @@
 
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, MessageCircle, Sparkles } from "lucide-react";
+import {
+  ArrowLeft,
+  MessageCircle,
+  Sparkles,
+  Search,
+  X,
+} from "lucide-react";
 import { products } from "@/lib/products";
 
 const productImages: Record<string, string> = {
@@ -50,6 +56,8 @@ function CollectionContent() {
   const params = useParams();
   const category = String(params.category || "").toLowerCase();
 
+  const [searchTerm, setSearchTerm] = useState("");
+
   const isSpecials = category === "specials";
   const isOrdinary = category === "ordinary";
 
@@ -61,6 +69,11 @@ function CollectionContent() {
 
   const categoryProducts = products.filter(
     (product) => product.category === selectedCategory
+  );
+
+  // Search only within the currently selected collection
+  const filteredProducts = categoryProducts.filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.trim().toLowerCase())
   );
 
   const categoryPrice = isSpecials ? 680 : 600;
@@ -161,14 +174,69 @@ function CollectionContent() {
           </p>
         </div>
 
+        {/* SEARCH PRODUCTS */}
+        <div className="mx-auto mb-10 max-w-xl">
+          <div className="flex items-center gap-3 rounded-full border border-[#d9c7aa] bg-white px-5 py-3 shadow-sm transition focus-within:border-[#a77b3d] focus-within:shadow-md">
+
+            <Search size={20} className="shrink-0 text-[#a77b3d]" />
+
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder={`Search ${selectedCategory} sweets...`}
+              aria-label={`Search ${selectedCategory} products`}
+              className="w-full bg-transparent text-sm text-[#501522] outline-none placeholder:text-[#a39482]"
+            />
+
+            {searchTerm && (
+              <button
+                type="button"
+                onClick={() => setSearchTerm("")}
+                aria-label="Clear search"
+                className="shrink-0 text-[#927e68] transition hover:text-[#501522]"
+              >
+                <X size={19} />
+              </button>
+            )}
+
+          </div>
+
+          {searchTerm && (
+            <p className="mt-3 text-center text-sm text-[#77695d]">
+              {filteredProducts.length} product(s) found
+            </p>
+          )}
+        </div>
+
         {categoryProducts.length === 0 ? (
           <p className="py-16 text-center text-[#76665a]">
             No products found in this collection.
           </p>
+        ) : filteredProducts.length === 0 ? (
+          <div className="py-16 text-center">
+            <Search size={35} className="mx-auto mb-4 text-[#b49a77]" />
+
+            <h3 className="font-serif text-xl font-bold text-[#501522]">
+              No Products Found
+            </h3>
+
+            <p className="mt-2 text-sm text-[#76665a]">
+              No sweets match "{searchTerm}". Try another product name.
+            </p>
+
+            <button
+              type="button"
+              onClick={() => setSearchTerm("")}
+              className="mt-5 rounded-full bg-[#501522] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#681d2d]"
+            >
+              Clear Search
+            </button>
+          </div>
         ) : (
           <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 
-            {categoryProducts.map((product, index) => {
+            {filteredProducts.map((product, index) => {
               const image =
                 productImages[product.id] || product.image || fallbackImage;
 
