@@ -1,286 +1,411 @@
 
 "use client";
 
-import { Suspense, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { motion } from "motion/react";
 import {
   ArrowLeft,
   MessageCircle,
-  CheckCircle2,
   Sparkles,
+  ShoppingBag,
+  CheckCircle2,
 } from "lucide-react";
 import { getProductById } from "@/lib/products";
 
-const WHATSAPP_NUMBER = "917799239933";
-
 const productImages: Record<string, string> = {
-  "Ajmeer Kalakhand":
-    "https://vellankifoods.com/cdn/shop/products/ajmeer_kalakand_1200x1200.jpg?v=1680179018",
-  "Chocolate Burfi":
-    "https://www.garudabazaar.net/cdn/shop/files/Chocolate_Burfi_2_1024x1024.png?v=1753964856",
+  // Specials
+  "special-1": "/products/specials/specials-1.jpeg",
+  "special-2": "/products/specials/specials-2.jpeg",
+  "special-3": "/products/specials/specials-3.jpeg",
+  "special-4": "/products/specials/specials-4.jpeg",
+  "special-5": "/products/specials/specials-5.jpeg",
+  "special-6": "/products/specials/specials-6.jpeg",
+  "special-7": "/products/specials/specials-7.jpeg",
+  "special-8": "/products/specials/specials-8.jpeg",
+  "special-9": "/products/specials/specials-9.jpeg",
+  "special-10": "/products/specials/specials-10.jpeg",
+  "special-11": "/products/specials/specials-11.jpeg",
+  "special-12": "/products/specials/specials-12.jpeg",
+  "special-13": "/products/specials/specials-13.jpeg",
+  "special-14": "/products/specials/specials-14.jpeg",
+  "special-15": "/products/specials/specials-15.jpeg",
+
+  // Ordinary
+  "ordinary-1": "/products/ordinary/ordinary-1.jpeg",
+  "ordinary-2": "/products/ordinary/ordinary-2.jpeg",
+  "ordinary-3": "/products/ordinary/ordinary-3.jpeg",
+  "ordinary-4": "/products/ordinary/ordinary-4.jpeg",
+  "ordinary-5": "/products/ordinary/ordinary-5.jpeg",
+  "ordinary-6": "/products/ordinary/ordinary-6.jpeg",
+  "ordinary-7": "/products/ordinary/ordinary-7.jpeg",
+  "ordinary-8": "/products/ordinary/ordinary-8.jpeg",
+  "ordinary-9": "/products/ordinary/ordinary-9.jpeg",
+  "ordinary-10": "/products/ordinary/ordinary-10.jpeg",
+  "ordinary-11": "/products/ordinary/ordinary-11.jpeg",
+  "ordinary-12": "/products/ordinary/ordinary-12.jpeg",
+  "ordinary-13": "/products/ordinary/ordinary-13.jpeg",
+  "ordinary-14": "/products/ordinary/ordinary-14.jpeg",
+  "ordinary-15": "/products/ordinary/ordinary-15.jpeg",
 };
 
 const fallbackImage =
-  "https://www.chatruhalwai.com/_next/static/media/slide3.359ea5ca.png";
+  "https://www.lemieldor.com/blog/indian-sweets-diwali.webp";
 
-const quantities = [
-  { label: "250 g", grams: 250 },
-  { label: "500 g", grams: 500 },
-  { label: "1 kg", grams: 1000 },
-];
+const ease = [0.22, 1, 0.36, 1] as const;
 
-function ProductDetailsContent() {
+export default function ProductDetailsPage() {
   const params = useParams();
-  const product = getProductById(String(params.id));
+  const id = String(params.id || "");
 
-  const [quantity, setQuantity] = useState(500);
+  const product = getProductById(id);
 
   if (!product) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-[#faf6ed]">
-        <div className="text-center">
-          <h1 className="font-serif text-4xl text-[#681c2b]">
-            Product not found
+      <main className="flex min-h-screen items-center justify-center bg-[#f8f3e9] px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease }}
+          className="text-center"
+        >
+          <h1 className="font-serif text-3xl font-bold text-[#501522]">
+            Product Not Found
           </h1>
+
+          <p className="mt-3 text-[#76665a]">
+            Sorry, this sweet is not available.
+          </p>
 
           <Link
             href="/"
-            className="mt-6 inline-block text-[#681c2b] underline"
+            className="mt-7 inline-flex items-center gap-2 rounded-full bg-[#501522] px-6 py-3 text-white transition hover:bg-[#681d2d]"
           >
-            Return to home
+            <ArrowLeft size={18} />
+            Back to Home
           </Link>
-        </div>
+        </motion.div>
       </main>
     );
   }
 
-  const totalPrice = Math.round((product.price * quantity) / 1000);
+  const image = productImages[product.id] || product.image || fallbackImage;
 
-  const image =
-    product.image || productImages[product.name] || fallbackImage;
+  const collectionLink =
+    product.category === "Specials"
+      ? "/collections/specials"
+      : "/collections/ordinary";
 
-  const handleOrder = () => {
-    const quantityLabel =
-      quantity === 1000 ? "1 kg" : `${quantity} g`;
+  const whatsappMessage = `Hello Harish Reddy Sweets, I am interested in ordering ${product.name} from your ${product.category} collection. Please share the ordering details.`;
 
-    const message = `Hello Harish Reddy Sweets!
-
-I would like to order:
-
-Product: ${product.name}
-Category: ${product.category}
-Quantity: ${quantityLabel}
-Price per kg: ₹${product.price}
-Total price: ₹${totalPrice}
-
-Please confirm my order.`;
-
-    window.open(
-      `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`,
-      "_blank",
-      "noopener,noreferrer"
-    );
-  };
+  const whatsappLink = `https://wa.me/917799239933?text=${encodeURIComponent(
+    whatsappMessage
+  )}`;
 
   return (
-    <main className="min-h-screen bg-[#faf6ed] text-[#35151b]">
-      <header className="sticky top-0 z-40 border-b border-[#eadfcf] bg-[#faf6ed]/95 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-5 md:px-10">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#681c2b] font-serif text-xl text-[#e9c77e]">
-              H
-            </div>
+    <main className="min-h-screen overflow-hidden bg-[#f8f3e9]">
 
-            <div>
-              <p className="font-serif text-lg tracking-wide text-[#681c2b]">
-                HARISH REDDY
-              </p>
+      {/* TOP BRAND SECTION */}
 
-              <p className="text-[9px] tracking-[0.35em] text-[#a47a3d]">
-                ARTISAN SWEETS
-              </p>
-            </div>
-          </Link>
+      <section className="relative overflow-hidden bg-[#501522] px-6 py-5">
 
+        <motion.div
+          className="absolute -right-20 -top-24 h-64 w-64 rounded-full bg-[#d6ad65] opacity-10 blur-3xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            x: [0, -20, 0],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+
+        <motion.div
+          className="relative mx-auto flex max-w-7xl items-center justify-between"
+          initial={{ opacity: 0, y: -15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease }}
+        >
           <Link
-            href="/"
-            className="flex items-center gap-2 text-sm text-[#681c2b] hover:text-[#a47a3d]"
+            href={collectionLink}
+            className="inline-flex items-center gap-2 text-sm text-[#e7c98e] transition duration-300 hover:-translate-x-1 hover:text-white"
           >
-            <ArrowLeft size={17} />
-            Back to Home
+            <ArrowLeft size={18} />
+            Back to {product.category}
           </Link>
-        </div>
-      </header>
 
-      <section className="mx-auto grid max-w-7xl gap-12 px-5 py-10 md:grid-cols-2 md:items-center md:gap-20 md:px-10 md:py-20">
-        {/* Product Image */}
-        <div className="relative overflow-hidden rounded-[28px] border border-[#e7d8bd] bg-[#efe2cc] shadow-xl">
-          <div className="aspect-square">
-            <img
-              src={image}
-              alt={`${product.name} representative image`}
-              className="h-full w-full object-cover transition duration-700 hover:scale-105"
-            />
-          </div>
+          <span className="font-serif text-sm font-bold tracking-[0.2em] text-white sm:text-base">
+            HARISH REDDY SWEETS
+          </span>
+        </motion.div>
+      </section>
 
-          <div className="absolute left-5 top-5 rounded-full bg-[#681c2b] px-5 py-2 text-xs tracking-widest text-[#f5dfaa] shadow-lg">
-            {product.category.toUpperCase()}
-          </div>
+      {/* PRODUCT DETAILS */}
 
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-7 pt-20">
-            <p className="text-xs tracking-[0.3em] text-[#f5dfaa]">
-              HARISH REDDY SWEETS
-            </p>
+      <section className="mx-auto max-w-7xl px-5 py-12 md:px-8 md:py-20">
 
-            <h2 className="mt-2 font-serif text-3xl text-white">
-              {product.name}
-            </h2>
-          </div>
-        </div>
+        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
 
-        {/* Product Details */}
-        <div className="py-3">
-          <div className="flex items-center gap-2 text-xs font-semibold tracking-[0.3em] text-[#a47a3d]">
-            <Sparkles size={15} />
-            OUR SWEET COLLECTION
-          </div>
+          {/* PRODUCT IMAGE */}
 
-          <h1 className="mt-6 font-serif text-4xl leading-tight text-[#681c2b] md:text-6xl">
-            {product.name}
-          </h1>
-
-          <div className="mt-6 h-[2px] w-20 bg-[#b38a4d]" />
-
-          <p className="mt-6 max-w-lg text-base leading-8 text-[#796b5d]">
-            {product.description}
-          </p>
-
-          {/* Price */}
-          <div className="mt-8 rounded-2xl border border-[#e5d6bc] bg-white/60 p-5">
-            <p className="text-sm text-[#88735e]">
-              Price per kilogram
-            </p>
-
-            <p className="mt-2 font-serif text-4xl text-[#681c2b]">
-              ₹{product.price}
-              <span className="ml-2 text-base text-[#88735e]">
-                / kg
-              </span>
-            </p>
-          </div>
-
-          {/* Quantity Selection */}
-          <div className="mt-9">
-            <p className="mb-4 text-sm font-semibold tracking-wide text-[#681c2b]">
-              SELECT YOUR QUANTITY
-            </p>
-
-            <div className="grid grid-cols-3 gap-3">
-              {quantities.map((option) => {
-                const selected = quantity === option.grams;
-
-                return (
-                  <button
-                    key={option.grams}
-                    onClick={() => setQuantity(option.grams)}
-                    className={`rounded-2xl border-2 px-3 py-4 text-center transition-all duration-200 ${
-                      selected
-                        ? "border-[#681c2b] bg-[#681c2b] text-white shadow-lg"
-                        : "border-[#dfcfb4] bg-white/60 text-[#681c2b] hover:border-[#a47a3d] hover:bg-white"
-                    }`}
-                  >
-                    <span className="block text-lg font-semibold">
-                      {option.label}
-                    </span>
-
-                    <span
-                      className={`mt-1 block text-xs ${
-                        selected
-                          ? "text-[#f0dba8]"
-                          : "text-[#88735e]"
-                      }`}
-                    >
-                      ₹
-                      {Math.round(
-                        (product.price * option.grams) / 1000
-                      )}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Total Price */}
-          <div className="mt-8 flex items-center justify-between rounded-2xl bg-[#efe4d2] px-6 py-5">
-            <div>
-              <p className="text-xs tracking-wider text-[#88735e]">
-                YOUR SELECTED QUANTITY
-              </p>
-
-              <p className="mt-1 text-lg font-semibold text-[#681c2b]">
-                {quantity === 1000 ? "1 kg" : `${quantity} g`}
-              </p>
-            </div>
-
-            <div className="text-right">
-              <p className="text-xs tracking-wider text-[#88735e]">
-                TOTAL PRICE
-              </p>
-
-              <p className="mt-1 font-serif text-3xl text-[#681c2b]">
-                ₹{totalPrice}
-              </p>
-            </div>
-          </div>
-
-          {/* WhatsApp Order */}
-          <button
-            onClick={handleOrder}
-            className="mt-7 flex w-full items-center justify-center gap-3 rounded-full bg-[#681c2b] px-7 py-5 text-sm font-semibold tracking-widest text-white shadow-lg transition duration-300 hover:-translate-y-1 hover:bg-[#84283b] hover:shadow-xl"
+          <motion.div
+            className="relative"
+            initial={{
+              opacity: 0,
+              x: -55,
+              scale: 0.94,
+            }}
+            animate={{
+              opacity: 1,
+              x: 0,
+              scale: 1,
+            }}
+            transition={{
+              duration: 1,
+              ease,
+            }}
           >
-            <MessageCircle size={20} />
-            ORDER ON WHATSAPP
-          </button>
+            <div className="absolute -inset-4 rounded-[2rem] border border-[#d6ad65] opacity-50" />
 
-          <div className="mt-5 flex items-center justify-center gap-2 text-sm text-[#88735e]">
-            <CheckCircle2 size={17} className="text-[#a47a3d]" />
-            Order directly with Harish Reddy Sweets
-          </div>
+            <div className="group relative overflow-hidden rounded-[1.5rem] bg-[#eee4d5] shadow-[0_20px_60px_rgba(80,21,34,0.16)]">
+
+              <motion.img
+                src={image}
+                alt={product.name}
+                className="h-[380px] w-full object-cover sm:h-[480px] lg:h-[560px]"
+                initial={{ scale: 1.12 }}
+                animate={{ scale: 1 }}
+                whileHover={{ scale: 1.055 }}
+                transition={{
+                  duration: 1.1,
+                  ease,
+                }}
+              />
+
+              <div className="absolute left-5 top-5 rounded-full bg-[#501522] px-5 py-2.5 text-xs font-semibold tracking-[0.15em] text-[#f7dfac] shadow-lg">
+                {product.category.toUpperCase()} COLLECTION
+              </div>
+
+              <motion.div
+                className="absolute bottom-5 right-5 flex h-14 w-14 items-center justify-center rounded-full border border-[#e7c98e] bg-[#501522]/90 text-[#e7c98e] backdrop-blur-sm"
+                initial={{ opacity: 0, rotate: -45, scale: 0.5 }}
+                animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                transition={{ delay: 0.7, duration: 0.6, ease }}
+              >
+                <Sparkles size={24} />
+              </motion.div>
+            </div>
+          </motion.div>
+
+          {/* PRODUCT INFORMATION */}
+
+          <motion.div
+            className="flex flex-col"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: {},
+              visible: {
+                transition: {
+                  staggerChildren: 0.15,
+                  delayChildren: 0.2,
+                },
+              },
+            }}
+          >
+            <motion.p
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.7, ease },
+                },
+              }}
+              className="flex items-center gap-2 text-xs font-semibold tracking-[0.3em] text-[#a77b3d]"
+            >
+              <Sparkles size={16} />
+              A SWEET TRADITION
+            </motion.p>
+
+            <motion.h1
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.8, ease },
+                },
+              }}
+              className="mt-5 font-serif text-4xl font-bold leading-tight text-[#501522] sm:text-5xl lg:text-6xl"
+            >
+              {product.name}
+            </motion.h1>
+
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, scaleX: 0 },
+                visible: {
+                  opacity: 1,
+                  scaleX: 1,
+                  transition: { duration: 0.7, ease },
+                },
+              }}
+              className="mt-7 h-[2px] w-24 origin-left bg-[#d6ad65]"
+            />
+
+            <motion.p
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.7, ease },
+                },
+              }}
+              className="mt-7 text-base leading-8 text-[#786b60] sm:text-lg"
+            >
+              {product.description}
+            </motion.p>
+
+            {/* PRICE CARD */}
+
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 25 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.7, ease },
+                },
+              }}
+              className="mt-9 rounded-2xl border border-[#e5d5bb] bg-white p-6 shadow-[0_8px_30px_rgba(80,21,34,0.06)]"
+            >
+              <p className="text-xs font-semibold tracking-[0.25em] text-[#927e68]">
+                OUR PRICE
+              </p>
+
+              <div className="mt-2 flex items-baseline gap-2">
+                <span className="font-serif text-4xl font-bold text-[#a77b3d] sm:text-5xl">
+                  ₹{product.price}
+                </span>
+
+                <span className="text-base font-medium text-[#76665a]">
+                  / kg
+                </span>
+              </div>
+
+              <div className="mt-5 flex items-center gap-2 text-sm text-[#76665a]">
+                <CheckCircle2 size={17} className="text-[#a77b3d]" />
+                Freshly prepared with care
+              </div>
+            </motion.div>
+
+            {/* ORDER BUTTON */}
+
+            <motion.a
+              href={whatsappLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              variants={{
+                hidden: { opacity: 0, y: 25 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.7, ease },
+                },
+              }}
+              whileHover={{
+                scale: 1.025,
+                y: -3,
+              }}
+              whileTap={{
+                scale: 0.97,
+              }}
+              className="mt-7 flex w-full items-center justify-center gap-3 rounded-full border-2 border-[#D4AF37] bg-[#501522] px-7 py-4 text-base font-bold text-[#f7dfac] shadow-[0_10px_25px_rgba(80,21,34,0.18)] transition-colors duration-300 hover:bg-[#681d2d]"
+            >
+              <MessageCircle size={21} />
+              Order on WhatsApp
+            </motion.a>
+
+            <motion.div
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: { duration: 0.7 },
+                },
+              }}
+              className="mt-5 flex items-center justify-center gap-2 text-sm text-[#927e68]"
+            >
+              <ShoppingBag size={16} />
+              Contact us for your order details
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-[#e8dcc8] px-5 py-9 text-center">
-        <p className="font-serif text-xl tracking-wider text-[#681c2b]">
-          HARISH REDDY SWEETS
-        </p>
+      {/* BOTTOM COLLECTION LINK */}
 
-        <p className="mt-3 text-xs text-[#88735e]">
-          DRS Complex, Ganesh Nagar, HMT Road, Chintal, Hyderabad – 500054
-        </p>
+      <motion.section
+        className="px-6 pb-16 text-center"
+        initial={{ opacity: 0, y: 25 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.8, ease }}
+      >
+        <div className="mx-auto max-w-3xl border-t border-[#e5d5bb] pt-10">
 
-        <p className="mt-3 text-xs text-[#a47a3d]">
-          © {new Date().getFullYear()} Harish Reddy Sweets. All rights reserved.
-        </p>
+          <p className="font-serif text-2xl font-bold text-[#501522]">
+            Explore More Sweet Delights
+          </p>
+
+          <p className="mt-3 text-sm text-[#786b60]">
+            Discover more varieties from our {product.category} collection.
+          </p>
+
+          <Link
+            href={collectionLink}
+            className="mt-6 inline-flex items-center gap-2 rounded-full border border-[#a77b3d] px-7 py-3 text-sm font-semibold text-[#501522] transition duration-300 hover:-translate-y-1 hover:bg-[#501522] hover:text-white hover:shadow-lg"
+          >
+            <ArrowLeft size={17} />
+            View {product.category} Collection
+          </Link>
+        </div>
+      </motion.section>
+
+      {/* FOOTER */}
+
+      <footer className="bg-[#501522] px-6 py-10 text-center text-[#f5e8d2]">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease }}
+        >
+          <h2 className="font-serif text-2xl font-bold tracking-wider text-white">
+            HARISH REDDY SWEETS
+          </h2>
+
+          <p className="mt-3 text-sm text-[#ddc7a5]">
+            A Sweet Tradition for Every Celebration
+          </p>
+
+          <p className="mt-5 text-sm text-[#ddc7a5]">
+            DRS Complex, Ganesh Nagar, HMT Road, Chintal, Hyderabad – 500054
+          </p>
+
+          <p className="mt-2 text-sm text-[#ddc7a5]">
+            Contact: 7799239933
+          </p>
+
+          <p className="mt-6 text-xs text-[#c5a77c]">
+            © {new Date().getFullYear()} Harish Reddy Sweets. All rights reserved.
+          </p>
+        </motion.div>
       </footer>
     </main>
-  );
-}
-
-export default function ProductDetailsPage() {
-  return (
-    <Suspense
-      fallback={
-        <main className="flex min-h-screen items-center justify-center bg-[#faf6ed]">
-          <p className="font-semibold text-[#681c2b]">
-            Loading product details...
-          </p>
-        </main>
-      }
-    >
-      <ProductDetailsContent />
-    </Suspense>
   );
 }

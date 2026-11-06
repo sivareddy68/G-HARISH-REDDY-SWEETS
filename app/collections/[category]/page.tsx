@@ -11,6 +11,7 @@ import {
   Search,
   X,
 } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 import { products } from "@/lib/products";
 
 const productImages: Record<string, string> = {
@@ -52,6 +53,23 @@ const productImages: Record<string, string> = {
 const fallbackImage =
   "https://www.lemieldor.com/blog/indian-sweets-diwali.webp";
 
+const ease = [0.22, 1, 0.36, 1] as const;
+
+const fadeUp = {
+  hidden: {
+    opacity: 0,
+    y: 35,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease,
+    },
+  },
+};
+
 function CollectionContent() {
   const params = useParams();
   const category = String(params.category || "").toLowerCase();
@@ -71,7 +89,6 @@ function CollectionContent() {
     (product) => product.category === selectedCategory
   );
 
-  // Search only within the currently selected collection
   const filteredProducts = categoryProducts.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.trim().toLowerCase())
   );
@@ -87,7 +104,11 @@ function CollectionContent() {
   if (!selectedCategory) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#f8f3e9] px-6 text-center">
-        <div>
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease }}
+        >
           <h1 className="text-3xl font-bold text-[#681d2d]">
             Collection Not Found
           </h1>
@@ -98,85 +119,170 @@ function CollectionContent() {
 
           <Link
             href="/"
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#681d2d] px-6 py-3 text-white"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#681d2d] px-6 py-3 text-white transition duration-300 hover:bg-[#501522]"
           >
             <ArrowLeft size={18} />
             Back to Home
           </Link>
-        </div>
+        </motion.div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#f8f3e9]">
+    <main className="min-h-screen overflow-hidden bg-[#f8f3e9]">
 
       {/* HERO SECTION */}
+
       <section className="relative flex min-h-[430px] w-full flex-col items-center justify-center overflow-hidden bg-[#501522] px-6 py-16 text-center text-[#fff8e9] md:py-24">
 
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute -left-20 -top-20 h-72 w-72 rounded-full bg-[#d6ad65] blur-3xl" />
-          <div className="absolute -bottom-24 -right-20 h-72 w-72 rounded-full bg-[#d6ad65] blur-3xl" />
-        </div>
+        {/* Animated decorative background */}
 
-        <div className="relative mx-auto flex w-full max-w-4xl flex-col items-center justify-center text-center">
+        <motion.div
+          className="absolute inset-0 opacity-20"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.2 }}
+          transition={{ duration: 1.5 }}
+        >
+          <motion.div
+            className="absolute -left-20 -top-20 h-72 w-72 rounded-full bg-[#d6ad65] blur-3xl"
+            animate={{
+              x: [0, 25, 0],
+              y: [0, 20, 0],
+              scale: [1, 1.12, 1],
+            }}
+            transition={{
+              duration: 12,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
 
-          <Link
-            href="/"
-            className="mb-8 inline-flex items-center justify-center gap-2 text-sm text-[#e7c98e] transition hover:text-white"
+          <motion.div
+            className="absolute -bottom-24 -right-20 h-72 w-72 rounded-full bg-[#d6ad65] blur-3xl"
+            animate={{
+              x: [0, -25, 0],
+              y: [0, -15, 0],
+              scale: [1, 1.1, 1],
+            }}
+            transition={{
+              duration: 14,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        </motion.div>
+
+        <motion.div
+          className="relative mx-auto flex w-full max-w-4xl flex-col items-center justify-center text-center"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.16,
+                delayChildren: 0.15,
+              },
+            },
+          }}
+        >
+          <motion.div variants={fadeUp}>
+            <Link
+              href="/"
+              className="mb-8 inline-flex items-center justify-center gap-2 text-sm text-[#e7c98e] transition duration-300 hover:-translate-x-1 hover:text-white"
+            >
+              <ArrowLeft size={17} />
+              Back to Home
+            </Link>
+          </motion.div>
+
+          <motion.div
+            variants={fadeUp}
+            className="mb-5 flex w-full items-center justify-center gap-2 text-center text-sm tracking-[0.3em] text-[#d9b878]"
           >
-            <ArrowLeft size={17} />
-            Back to Home
-          </Link>
-
-          <div className="mb-5 flex w-full items-center justify-center gap-2 text-center text-sm tracking-[0.3em] text-[#d9b878]">
             <Sparkles size={17} />
             HARISH REDDY SWEETS
             <Sparkles size={17} />
-          </div>
+          </motion.div>
 
-          <h1 className="w-full text-center font-serif text-5xl font-bold md:text-7xl">
+          <motion.h1
+            variants={fadeUp}
+            className="w-full text-center font-serif text-5xl font-bold md:text-7xl"
+          >
             {selectedCategory}
-          </h1>
+          </motion.h1>
 
-          <div className="mx-auto my-6 h-[2px] w-24 bg-[#d6ad65]" />
+          <motion.div
+            variants={fadeUp}
+            className="mx-auto my-6 h-[2px] w-24 bg-[#d6ad65]"
+          />
 
-          <p className="mx-auto w-full max-w-2xl text-center text-base leading-8 text-[#f0dfc5] md:text-lg">
+          <motion.p
+            variants={fadeUp}
+            className="mx-auto w-full max-w-2xl text-center text-base leading-8 text-[#f0dfc5] md:text-lg"
+          >
             Discover our carefully presented collection of traditional Indian
             sweets, made for every celebration and special moment.
-          </p>
+          </motion.p>
 
-          <p className="mt-7 w-full text-center text-2xl font-semibold text-[#e7c98e]">
+          <motion.p
+            variants={fadeUp}
+            className="mt-7 w-full text-center text-2xl font-semibold text-[#e7c98e]"
+          >
             ₹{categoryPrice} / kg
-          </p>
+          </motion.p>
 
-          <p className="mt-2 w-full text-center text-xs tracking-[0.25em] text-[#e8d7bd]">
+          <motion.p
+            variants={fadeUp}
+            className="mt-2 w-full text-center text-xs tracking-[0.25em] text-[#e8d7bd]"
+          >
             {categoryProducts.length} VARIETIES
-          </p>
-
-        </div>
+          </motion.p>
+        </motion.div>
       </section>
 
       {/* PRODUCTS SECTION */}
+
       <section className="mx-auto max-w-7xl px-5 py-14 md:px-8 md:py-20">
 
-        <div className="mb-10 text-center">
+        {/* Section heading */}
+
+        <motion.div
+          className="mb-10 text-center"
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+        >
           <p className="text-sm font-semibold tracking-[0.3em] text-[#a77b3d]">
             OUR COLLECTION
           </p>
 
-          <h2 className="mt-3 font-serif text-3xl font-bold text-[#501522] md:text-4xl">
+          <motion.h2
+            className="mt-3 font-serif text-3xl font-bold text-[#501522] md:text-4xl"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.15, ease }}
+          >
             Explore Our {selectedCategory}
-          </h2>
+          </motion.h2>
 
           <p className="mt-3 text-sm text-[#77695d]">
             Choose your favourite sweet and order directly through WhatsApp.
           </p>
-        </div>
+        </motion.div>
 
         {/* SEARCH PRODUCTS */}
-        <div className="mx-auto mb-12 max-w-2xl text-center">
 
+        <motion.div
+          className="mx-auto mb-12 max-w-2xl text-center"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.8, ease }}
+        >
           <p className="mb-2 text-xs font-semibold tracking-[0.3em] text-[#a77b3d]">
             FIND YOUR FAVOURITE
           </p>
@@ -185,11 +291,11 @@ function CollectionContent() {
             Search Our {selectedCategory}
           </h3>
 
-          <div className="group flex items-center gap-3 rounded-full border border-[#d6ad65] bg-white px-5 py-4 shadow-[0_4px_18px_rgba(80,21,34,0.06)] transition duration-300 focus-within:border-[#a77b3d] focus-within:shadow-[0_5px_22px_rgba(80,21,34,0.12)]">
+          <div className="group flex items-center gap-3 rounded-full border border-[#d6ad65] bg-white px-5 py-4 shadow-[0_4px_18px_rgba(80,21,34,0.06)] transition duration-300 focus-within:border-[#a77b3d] focus-within:shadow-[0_5px_22px_rgba(80,21,34,0.12)] hover:shadow-[0_8px_25px_rgba(80,21,34,0.10)]">
 
             <Search
               size={21}
-              className="shrink-0 text-[#a77b3d]"
+              className="shrink-0 text-[#a77b3d] transition-transform duration-300 group-focus-within:scale-110"
             />
 
             <input
@@ -201,34 +307,62 @@ function CollectionContent() {
               className="w-full bg-transparent text-base text-[#501522] outline-none placeholder:text-[#a39482]"
             />
 
-            {searchTerm && (
-              <button
-                type="button"
-                onClick={() => setSearchTerm("")}
-                aria-label="Clear search"
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#927e68] transition hover:bg-[#f8f3e9] hover:text-[#501522]"
-              >
-                <X size={19} />
-              </button>
-            )}
-
+            <AnimatePresence>
+              {searchTerm && (
+                <motion.button
+                  type="button"
+                  onClick={() => setSearchTerm("")}
+                  aria-label="Clear search"
+                  initial={{ opacity: 0, scale: 0.5, rotate: -45 }}
+                  animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                  exit={{ opacity: 0, scale: 0.5, rotate: 45 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#927e68] transition hover:bg-[#f8f3e9] hover:text-[#501522]"
+                >
+                  <X size={19} />
+                </motion.button>
+              )}
+            </AnimatePresence>
           </div>
 
-          {searchTerm.trim() && (
-            <p className="mt-3 text-xs tracking-wide text-[#927e68]">
-              {filteredProducts.length} {filteredProducts.length === 1 ? "sweet" : "sweets"} found
-            </p>
-          )}
+          <AnimatePresence mode="wait">
+            {searchTerm.trim() && (
+              <motion.p
+                key={filteredProducts.length}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2 }}
+                className="mt-3 text-xs tracking-wide text-[#927e68]"
+              >
+                {filteredProducts.length}{" "}
+                {filteredProducts.length === 1 ? "sweet" : "sweets"} found
+              </motion.p>
+            )}
+          </AnimatePresence>
+        </motion.div>
 
-        </div>
+        {/* PRODUCT RESULTS */}
 
         {categoryProducts.length === 0 ? (
-          <p className="py-16 text-center text-[#76665a]">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="py-16 text-center text-[#76665a]"
+          >
             No products found in this collection.
-          </p>
+          </motion.p>
         ) : filteredProducts.length === 0 ? (
-          <div className="py-16 text-center">
-            <Search size={35} className="mx-auto mb-4 text-[#b49a77]" />
+          <motion.div
+            className="py-16 text-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, ease }}
+          >
+            <Search
+              size={35}
+              className="mx-auto mb-4 text-[#b49a77]"
+            />
 
             <h3 className="font-serif text-xl font-bold text-[#501522]">
               No Products Found
@@ -241,90 +375,184 @@ function CollectionContent() {
             <button
               type="button"
               onClick={() => setSearchTerm("")}
-              className="mt-5 rounded-full bg-[#501522] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#681d2d]"
+              className="mt-5 rounded-full bg-[#501522] px-6 py-3 text-sm font-semibold text-white transition duration-300 hover:-translate-y-1 hover:bg-[#681d2d] hover:shadow-lg"
             >
               Clear Search
             </button>
-          </div>
+          </motion.div>
         ) : (
-          <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <motion.div
+            layout
+            className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+          >
+            <AnimatePresence mode="popLayout">
+              {filteredProducts.map((product, index) => {
+                const image =
+                  productImages[product.id] ||
+                  product.image ||
+                  fallbackImage;
 
-            {filteredProducts.map((product, index) => {
-              const image =
-                productImages[product.id] || product.image || fallbackImage;
+                return (
+                  <motion.article
+                    key={product.id}
+                    layout
+                    initial={{
+                      opacity: 0,
+                      y: 45,
+                      scale: 0.94,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                      scale: 1,
+                    }}
+                    exit={{
+                      opacity: 0,
+                      y: 20,
+                      scale: 0.94,
+                    }}
+                    transition={{
+                      duration: 0.55,
+                      delay: Math.min(index * 0.07, 0.5),
+                      ease,
+                      layout: {
+                        duration: 0.35,
+                      },
+                    }}
+                    whileHover={{
+                      y: -9,
+                      transition: {
+                        duration: 0.3,
+                        ease,
+                      },
+                    }}
+                    className="group overflow-hidden rounded-2xl border border-[#e9ddc9] bg-white shadow-sm transition-shadow duration-500 hover:shadow-xl"
+                  >
+                    {/* PRODUCT IMAGE */}
 
-              return (
-                <article
-                  key={product.id}
-                  className="group overflow-hidden rounded-2xl border border-[#e9ddc9] bg-white shadow-sm transition duration-500 hover:-translate-y-2 hover:shadow-xl"
-                >
+                    <div className="relative h-64 overflow-hidden bg-[#eee4d5]">
+                      <motion.img
+                        src={image}
+                        alt={product.name}
+                        className="h-full w-full object-cover"
+                        loading={index < 4 ? "eager" : "lazy"}
+                        whileHover={{
+                          scale: 1.1,
+                        }}
+                        transition={{
+                          duration: 0.8,
+                          ease,
+                        }}
+                      />
 
-                  <div className="relative h-64 overflow-hidden bg-[#eee4d5]">
-                    <img
-                      src={image}
-                      alt={product.name}
-                      className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
-                      loading={index < 4 ? "eager" : "lazy"}
-                    />
+                      {/* Category badge */}
 
-                    <div className="absolute left-4 top-4 rounded-full bg-[#501522] px-4 py-2 text-xs font-semibold tracking-wider text-[#f7dfac]">
-                      {selectedCategory}
+                      <motion.div
+                        initial={{ opacity: 0, x: -15 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{
+                          duration: 0.5,
+                          delay: Math.min(index * 0.07, 0.5) + 0.2,
+                        }}
+                        className="absolute left-4 top-4 rounded-full bg-[#501522] px-4 py-2 text-xs font-semibold tracking-wider text-[#f7dfac] shadow-md"
+                      >
+                        {selectedCategory}
+                      </motion.div>
                     </div>
-                  </div>
 
-                  <div className="p-5">
-                    <h3 className="font-serif text-xl font-bold text-[#501522]">
-                      {product.name}
-                    </h3>
+                    {/* PRODUCT DETAILS */}
 
-                    <p className="mt-2 min-h-[42px] text-sm leading-6 text-[#786b60]">
-                      {product.description}
-                    </p>
+                    <div className="p-5">
+                      <motion.h3
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          duration: 0.45,
+                          delay: Math.min(index * 0.07, 0.5) + 0.1,
+                        }}
+                        className="font-serif text-xl font-bold text-[#501522]"
+                      >
+                        {product.name}
+                      </motion.h3>
 
-                    <div className="mt-5 flex items-center justify-between border-t border-[#eee3d4] pt-4">
-                      <div>
-                        <p className="text-xs tracking-wider text-[#927e68]">
-                          PRICE
-                        </p>
+                      <p className="mt-2 min-h-[42px] text-sm leading-6 text-[#786b60]">
+                        {product.description}
+                      </p>
 
-                        <p className="mt-1 text-2xl font-bold text-[#a77b3d]">
-                          ₹{product.price}
-                          <span className="text-sm font-medium text-[#76665a]">
-                            /kg
-                          </span>
-                        </p>
+                      {/* PRICE */}
+
+                      <div className="mt-5 flex items-center justify-between border-t border-[#eee3d4] pt-4">
+                        <div>
+                          <p className="text-xs tracking-wider text-[#927e68]">
+                            PRICE
+                          </p>
+
+                          <motion.p
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                              duration: 0.5,
+                              delay: Math.min(index * 0.07, 0.5) + 0.2,
+                            }}
+                            className="mt-1 text-2xl font-bold text-[#a77b3d]"
+                          >
+                            ₹{product.price}
+                            <span className="text-sm font-medium text-[#76665a]">
+                              /kg
+                            </span>
+                          </motion.p>
+                        </div>
                       </div>
+
+                      {/* WHATSAPP ORDER BUTTON */}
+
+                      <motion.a
+                        href={whatsappOrder(product.name)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{
+                          scale: 1.035,
+                          y: -2,
+                        }}
+                        whileTap={{
+                          scale: 0.97,
+                        }}
+                        transition={{
+                          duration: 0.25,
+                        }}
+                        className="mt-5 flex w-full items-center justify-center gap-2 rounded-full border-2 border-[#D4AF37] bg-[#FFF3D6] px-5 py-3.5 text-sm font-bold text-[#501522] shadow-sm transition-colors duration-300 hover:bg-[#D4AF37] hover:text-[#501522]"
+                      >
+                        <MessageCircle size={18} />
+                        Order on WhatsApp
+                      </motion.a>
                     </div>
-
-                    {/* WHATSAPP ORDER BUTTON */}
-                    <a
-                      href={whatsappOrder(product.name)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-5 flex w-full items-center justify-center gap-2 rounded-full border-2 border-[#D4AF37] bg-[#FFF3D6] px-5 py-3.5 text-sm font-bold text-[#501522] shadow-sm transition duration-300 hover:bg-[#D4AF37] hover:text-[#501522]"
-                    >
-                      <MessageCircle size={18} />
-                      Order on WhatsApp
-                    </a>
-                  </div>
-
-                </article>
-              );
-            })}
-
-          </div>
+                  </motion.article>
+                );
+              })}
+            </AnimatePresence>
+          </motion.div>
         )}
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-[#501522] px-6 py-10 text-center text-[#f5e8d2]">
 
-        <h2
+      <motion.footer
+        className="bg-[#501522] px-6 py-10 text-center text-[#f5e8d2]"
+        initial={{ opacity: 0, y: 35 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.8, ease }}
+      >
+        <motion.h2
           className="font-serif text-2xl font-bold tracking-wider"
           style={{ color: "#FFFFFF" }}
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
         >
           HARISH REDDY SWEETS
-        </h2>
+        </motion.h2>
 
         <p className="mt-3 text-sm text-[#ddc7a5]">
           A Sweet Tradition for Every Celebration
@@ -341,9 +569,7 @@ function CollectionContent() {
         <p className="mt-6 text-xs text-[#c5a77c]">
           © {new Date().getFullYear()} Harish Reddy Sweets. All rights reserved.
         </p>
-
-      </footer>
-
+      </motion.footer>
     </main>
   );
 }
@@ -353,9 +579,17 @@ export default function CollectionPage() {
     <Suspense
       fallback={
         <main className="flex min-h-screen items-center justify-center bg-[#f8f3e9]">
-          <p className="text-lg font-semibold text-[#681d2d]">
+          <motion.p
+            className="text-lg font-semibold text-[#681d2d]"
+            animate={{ opacity: [0.45, 1, 0.45] }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          >
             Loading collection...
-          </p>
+          </motion.p>
         </main>
       }
     >
