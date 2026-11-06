@@ -11,11 +11,10 @@ import {
   Search,
   X,
 } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { products } from "@/lib/products";
 
 const productImages: Record<string, string> = {
-  // Specials
   "special-1": "/products/specials/specials-1.jpeg",
   "special-2": "/products/specials/specials-2.jpeg",
   "special-3": "/products/specials/specials-3.jpeg",
@@ -32,7 +31,6 @@ const productImages: Record<string, string> = {
   "special-14": "/products/specials/specials-14.jpeg",
   "special-15": "/products/specials/specials-15.jpeg",
 
-  // Ordinary
   "ordinary-1": "/products/ordinary/ordinary-1.jpeg",
   "ordinary-2": "/products/ordinary/ordinary-2.jpeg",
   "ordinary-3": "/products/ordinary/ordinary-3.jpeg",
@@ -56,23 +54,18 @@ const fallbackImage =
 const ease = [0.22, 1, 0.36, 1] as const;
 
 const fadeUp = {
-  hidden: {
-    opacity: 0,
-    y: 35,
-  },
+  hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: {
-      duration: 0.8,
-      ease,
-    },
+    transition: { duration: 0.75, ease },
   },
 };
 
 function CollectionContent() {
   const params = useParams();
   const category = String(params.category || "").toLowerCase();
+  const reduceMotion = useReducedMotion();
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -105,7 +98,7 @@ function CollectionContent() {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#f8f3e9] px-6 text-center">
         <motion.div
-          initial={{ opacity: 0, y: 25 }}
+          initial={reduceMotion ? false : { opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease }}
         >
@@ -132,65 +125,59 @@ function CollectionContent() {
   return (
     <main className="min-h-screen overflow-hidden bg-[#f8f3e9]">
 
-      {/* HERO SECTION */}
+      {/* HERO */}
 
       <section className="relative flex min-h-[430px] w-full flex-col items-center justify-center overflow-hidden bg-[#501522] px-6 py-16 text-center text-[#fff8e9] md:py-24">
 
-        {/* Animated decorative background */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-20">
+          {!reduceMotion && (
+            <>
+              <motion.div
+                className="absolute -left-20 -top-20 h-72 w-72 rounded-full bg-[#d6ad65] blur-3xl"
+                animate={{
+                  x: [0, 25, 0],
+                  y: [0, 20, 0],
+                  scale: [1, 1.12, 1],
+                }}
+                transition={{
+                  duration: 12,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+
+              <motion.div
+                className="absolute -bottom-24 -right-20 h-72 w-72 rounded-full bg-[#d6ad65] blur-3xl"
+                animate={{
+                  x: [0, -25, 0],
+                  y: [0, -15, 0],
+                  scale: [1, 1.1, 1],
+                }}
+                transition={{
+                  duration: 14,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+            </>
+          )}
+        </div>
 
         <motion.div
-          className="absolute inset-0 opacity-20"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.2 }}
-          transition={{ duration: 1.5 }}
-        >
-          <motion.div
-            className="absolute -left-20 -top-20 h-72 w-72 rounded-full bg-[#d6ad65] blur-3xl"
-            animate={{
-              x: [0, 25, 0],
-              y: [0, 20, 0],
-              scale: [1, 1.12, 1],
-            }}
-            transition={{
-              duration: 12,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-
-          <motion.div
-            className="absolute -bottom-24 -right-20 h-72 w-72 rounded-full bg-[#d6ad65] blur-3xl"
-            animate={{
-              x: [0, -25, 0],
-              y: [0, -15, 0],
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              duration: 14,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-        </motion.div>
-
-        <motion.div
-          className="relative mx-auto flex w-full max-w-4xl flex-col items-center justify-center text-center"
+          className="relative mx-auto flex w-full max-w-4xl flex-col items-center"
           initial="hidden"
           animate="visible"
           variants={{
             hidden: {},
             visible: {
-              transition: {
-                staggerChildren: 0.16,
-                delayChildren: 0.15,
-              },
+              transition: { staggerChildren: 0.15 },
             },
           }}
         >
           <motion.div variants={fadeUp}>
             <Link
               href="/"
-              className="mb-8 inline-flex items-center justify-center gap-2 text-sm text-[#e7c98e] transition duration-300 hover:-translate-x-1 hover:text-white"
+              className="mb-8 inline-flex items-center gap-2 text-sm text-[#e7c98e] transition duration-300 hover:-translate-x-1 hover:text-white"
             >
               <ArrowLeft size={17} />
               Back to Home
@@ -199,7 +186,7 @@ function CollectionContent() {
 
           <motion.div
             variants={fadeUp}
-            className="mb-5 flex w-full items-center justify-center gap-2 text-center text-sm tracking-[0.3em] text-[#d9b878]"
+            className="mb-5 flex items-center justify-center gap-2 text-sm tracking-[0.3em] text-[#d9b878]"
           >
             <Sparkles size={17} />
             HARISH REDDY SWEETS
@@ -208,19 +195,19 @@ function CollectionContent() {
 
           <motion.h1
             variants={fadeUp}
-            className="w-full text-center font-serif text-5xl font-bold md:text-7xl"
+            className="font-serif text-5xl font-bold md:text-7xl"
           >
             {selectedCategory}
           </motion.h1>
 
           <motion.div
             variants={fadeUp}
-            className="mx-auto my-6 h-[2px] w-24 bg-[#d6ad65]"
+            className="my-6 h-[2px] w-24 bg-[#d6ad65]"
           />
 
           <motion.p
             variants={fadeUp}
-            className="mx-auto w-full max-w-2xl text-center text-base leading-8 text-[#f0dfc5] md:text-lg"
+            className="max-w-2xl text-base leading-8 text-[#f0dfc5] md:text-lg"
           >
             Discover our carefully presented collection of traditional Indian
             sweets, made for every celebration and special moment.
@@ -228,25 +215,23 @@ function CollectionContent() {
 
           <motion.p
             variants={fadeUp}
-            className="mt-7 w-full text-center text-2xl font-semibold text-[#e7c98e]"
+            className="mt-7 text-2xl font-semibold text-[#e7c98e]"
           >
             ₹{categoryPrice} / kg
           </motion.p>
 
           <motion.p
             variants={fadeUp}
-            className="mt-2 w-full text-center text-xs tracking-[0.25em] text-[#e8d7bd]"
+            className="mt-2 text-xs tracking-[0.25em] text-[#e8d7bd]"
           >
             {categoryProducts.length} VARIETIES
           </motion.p>
         </motion.div>
       </section>
 
-      {/* PRODUCTS SECTION */}
+      {/* PRODUCTS */}
 
       <section className="mx-auto max-w-7xl px-5 py-14 md:px-8 md:py-20">
-
-        {/* Section heading */}
 
         <motion.div
           className="mb-10 text-center"
@@ -259,29 +244,23 @@ function CollectionContent() {
             OUR COLLECTION
           </p>
 
-          <motion.h2
-            className="mt-3 font-serif text-3xl font-bold text-[#501522] md:text-4xl"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.15, ease }}
-          >
+          <h2 className="mt-3 font-serif text-3xl font-bold text-[#501522] md:text-4xl">
             Explore Our {selectedCategory}
-          </motion.h2>
+          </h2>
 
           <p className="mt-3 text-sm text-[#77695d]">
             Choose your favourite sweet and order directly through WhatsApp.
           </p>
         </motion.div>
 
-        {/* SEARCH PRODUCTS */}
+        {/* SEARCH */}
 
         <motion.div
           className="mx-auto mb-12 max-w-2xl text-center"
-          initial={{ opacity: 0, y: 30 }}
+          initial={reduceMotion ? false : { opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.8, ease }}
+          transition={{ duration: 0.75, ease }}
         >
           <p className="mb-2 text-xs font-semibold tracking-[0.3em] text-[#a77b3d]">
             FIND YOUR FAVOURITE
@@ -291,8 +270,7 @@ function CollectionContent() {
             Search Our {selectedCategory}
           </h3>
 
-          <div className="group flex items-center gap-3 rounded-full border border-[#d6ad65] bg-white px-5 py-4 shadow-[0_4px_18px_rgba(80,21,34,0.06)] transition duration-300 focus-within:border-[#a77b3d] focus-within:shadow-[0_5px_22px_rgba(80,21,34,0.12)] hover:shadow-[0_8px_25px_rgba(80,21,34,0.10)]">
-
+          <div className="group flex items-center gap-3 rounded-full border border-[#d6ad65] bg-white px-5 py-4 shadow-[0_4px_18px_rgba(80,21,34,0.06)] transition duration-300 hover:shadow-[0_8px_25px_rgba(80,21,34,0.10)] focus-within:border-[#a77b3d]">
             <Search
               size={21}
               className="shrink-0 text-[#a77b3d] transition-transform duration-300 group-focus-within:scale-110"
@@ -313,11 +291,10 @@ function CollectionContent() {
                   type="button"
                   onClick={() => setSearchTerm("")}
                   aria-label="Clear search"
-                  initial={{ opacity: 0, scale: 0.5, rotate: -45 }}
-                  animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                  exit={{ opacity: 0, scale: 0.5, rotate: 45 }}
-                  transition={{ duration: 0.2 }}
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#927e68] transition hover:bg-[#f8f3e9] hover:text-[#501522]"
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#927e68] hover:bg-[#f8f3e9]"
                 >
                   <X size={19} />
                 </motion.button>
@@ -332,8 +309,7 @@ function CollectionContent() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.2 }}
-                className="mt-3 text-xs tracking-wide text-[#927e68]"
+                className="mt-3 text-xs text-[#927e68]"
               >
                 {filteredProducts.length}{" "}
                 {filteredProducts.length === 1 ? "sweet" : "sweets"} found
@@ -342,27 +318,15 @@ function CollectionContent() {
           </AnimatePresence>
         </motion.div>
 
-        {/* PRODUCT RESULTS */}
+        {/* PRODUCT GRID */}
 
-        {categoryProducts.length === 0 ? (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="py-16 text-center text-[#76665a]"
-          >
-            No products found in this collection.
-          </motion.p>
-        ) : filteredProducts.length === 0 ? (
+        {filteredProducts.length === 0 ? (
           <motion.div
             className="py-16 text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, ease }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
           >
-            <Search
-              size={35}
-              className="mx-auto mb-4 text-[#b49a77]"
-            />
+            <Search size={35} className="mx-auto mb-4 text-[#b49a77]" />
 
             <h3 className="font-serif text-xl font-bold text-[#501522]">
               No Products Found
@@ -375,7 +339,7 @@ function CollectionContent() {
             <button
               type="button"
               onClick={() => setSearchTerm("")}
-              className="mt-5 rounded-full bg-[#501522] px-6 py-3 text-sm font-semibold text-white transition duration-300 hover:-translate-y-1 hover:bg-[#681d2d] hover:shadow-lg"
+              className="mt-5 rounded-full bg-[#501522] px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-1 hover:bg-[#681d2d]"
             >
               Clear Search
             </button>
@@ -396,84 +360,86 @@ function CollectionContent() {
                   <motion.article
                     key={product.id}
                     layout
-                    initial={{
-                      opacity: 0,
-                      y: 45,
-                      scale: 0.94,
-                    }}
-                    animate={{
-                      opacity: 1,
-                      y: 0,
-                      scale: 1,
-                    }}
-                    exit={{
-                      opacity: 0,
-                      y: 20,
-                      scale: 0.94,
-                    }}
+                    initial={
+                      reduceMotion
+                        ? false
+                        : { opacity: 0, y: 35, scale: 0.96 }
+                    }
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 18, scale: 0.97 }}
                     transition={{
-                      duration: 0.55,
-                      delay: Math.min(index * 0.07, 0.5),
+                      duration: reduceMotion ? 0.01 : 0.55,
+                      delay: reduceMotion ? 0 : Math.min(index * 0.055, 0.4),
                       ease,
-                      layout: {
-                        duration: 0.35,
-                      },
+                      layout: { duration: 0.35 },
                     }}
-                    whileHover={{
-                      y: -9,
-                      transition: {
-                        duration: 0.3,
-                        ease,
-                      },
-                    }}
-                    className="group overflow-hidden rounded-2xl border border-[#e9ddc9] bg-white shadow-sm transition-shadow duration-500 hover:shadow-xl"
+                    whileHover={
+                      reduceMotion
+                        ? undefined
+                        : {
+                            y: -8,
+                            transition: { duration: 0.3, ease },
+                          }
+                    }
+                    className="group overflow-hidden rounded-2xl border border-[#e9ddc9] bg-white shadow-sm transition-all duration-500 hover:border-[#d6ad65] hover:shadow-[0_18px_40px_rgba(80,21,34,0.14)]"
                   >
-                    {/* PRODUCT IMAGE */}
+                    {/* ANIMATED PRODUCT PHOTO */}
 
                     <div className="relative h-64 overflow-hidden bg-[#eee4d5]">
+
                       <motion.img
                         src={image}
                         alt={product.name}
-                        className="h-full w-full object-cover"
                         loading={index < 4 ? "eager" : "lazy"}
-                        whileHover={{
-                          scale: 1.1,
-                        }}
+                        initial={
+                          reduceMotion
+                            ? false
+                            : { opacity: 0, scale: 1.12 }
+                        }
+                        animate={{ opacity: 1, scale: 1 }}
+                        whileHover={
+                          reduceMotion
+                            ? undefined
+                            : { scale: 1.12 }
+                        }
                         transition={{
-                          duration: 0.8,
+                          duration: reduceMotion ? 0.01 : 1,
                           ease,
                         }}
+                        className="h-full w-full object-cover"
                       />
 
-                      {/* Category badge */}
+                      {/* Subtle photo overlay */}
+
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#260710]/25 via-transparent to-transparent opacity-60 transition-opacity duration-500 group-hover:opacity-20" />
+
+                      {/* GOLD IMAGE FRAME */}
 
                       <motion.div
-                        initial={{ opacity: 0, x: -15 }}
+                        className="pointer-events-none absolute inset-3 rounded-xl border border-[#f3d99e]/0 transition-all duration-500 group-hover:border-[#f3d99e]/90"
+                      />
+
+                      {/* CATEGORY BADGE */}
+
+                      <motion.div
+                        initial={reduceMotion ? false : { opacity: 0, x: -12 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{
-                          duration: 0.5,
-                          delay: Math.min(index * 0.07, 0.5) + 0.2,
+                          duration: 0.45,
+                          delay: reduceMotion ? 0 : Math.min(index * 0.055, 0.4) + 0.15,
                         }}
-                        className="absolute left-4 top-4 rounded-full bg-[#501522] px-4 py-2 text-xs font-semibold tracking-wider text-[#f7dfac] shadow-md"
+                        className="absolute left-4 top-4 rounded-full bg-[#501522]/95 px-4 py-2 text-xs font-semibold tracking-wider text-[#f7dfac] shadow-md backdrop-blur-sm"
                       >
                         {selectedCategory}
                       </motion.div>
                     </div>
 
-                    {/* PRODUCT DETAILS */}
+                    {/* PRODUCT INFORMATION */}
 
                     <div className="p-5">
-                      <motion.h3
-                        initial={{ opacity: 0, y: 12 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{
-                          duration: 0.45,
-                          delay: Math.min(index * 0.07, 0.5) + 0.1,
-                        }}
-                        className="font-serif text-xl font-bold text-[#501522]"
-                      >
+                      <h3 className="font-serif text-xl font-bold text-[#501522] transition-colors duration-300 group-hover:text-[#a77b3d]">
                         {product.name}
-                      </motion.h3>
+                      </h3>
 
                       <p className="mt-2 min-h-[42px] text-sm leading-6 text-[#786b60]">
                         {product.description}
@@ -488,13 +454,10 @@ function CollectionContent() {
                           </p>
 
                           <motion.p
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{
-                              duration: 0.5,
-                              delay: Math.min(index * 0.07, 0.5) + 0.2,
-                            }}
                             className="mt-1 text-2xl font-bold text-[#a77b3d]"
+                            whileHover={
+                              reduceMotion ? undefined : { scale: 1.04 }
+                            }
                           >
                             ₹{product.price}
                             <span className="text-sm font-medium text-[#76665a]">
@@ -504,23 +467,20 @@ function CollectionContent() {
                         </div>
                       </div>
 
-                      {/* WHATSAPP ORDER BUTTON */}
+                      {/* WHATSAPP */}
 
                       <motion.a
                         href={whatsappOrder(product.name)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        whileHover={{
-                          scale: 1.035,
-                          y: -2,
-                        }}
-                        whileTap={{
-                          scale: 0.97,
-                        }}
-                        transition={{
-                          duration: 0.25,
-                        }}
-                        className="mt-5 flex w-full items-center justify-center gap-2 rounded-full border-2 border-[#D4AF37] bg-[#FFF3D6] px-5 py-3.5 text-sm font-bold text-[#501522] shadow-sm transition-colors duration-300 hover:bg-[#D4AF37] hover:text-[#501522]"
+                        whileHover={
+                          reduceMotion
+                            ? undefined
+                            : { scale: 1.035, y: -2 }
+                        }
+                        whileTap={reduceMotion ? undefined : { scale: 0.97 }}
+                        transition={{ duration: 0.25 }}
+                        className="mt-5 flex w-full items-center justify-center gap-2 rounded-full border-2 border-[#D4AF37] bg-[#FFF3D6] px-5 py-3.5 text-sm font-bold text-[#501522] shadow-sm transition-colors duration-300 hover:bg-[#D4AF37]"
                       >
                         <MessageCircle size={18} />
                         Order on WhatsApp
@@ -538,21 +498,14 @@ function CollectionContent() {
 
       <motion.footer
         className="bg-[#501522] px-6 py-10 text-center text-[#f5e8d2]"
-        initial={{ opacity: 0, y: 35 }}
+        initial={reduceMotion ? false : { opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.15 }}
         transition={{ duration: 0.8, ease }}
       >
-        <motion.h2
-          className="font-serif text-2xl font-bold tracking-wider"
-          style={{ color: "#FFFFFF" }}
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
+        <h2 className="font-serif text-2xl font-bold tracking-wider text-white">
           HARISH REDDY SWEETS
-        </motion.h2>
+        </h2>
 
         <p className="mt-3 text-sm text-[#ddc7a5]">
           A Sweet Tradition for Every Celebration
@@ -567,7 +520,7 @@ function CollectionContent() {
         </p>
 
         <p className="mt-6 text-xs text-[#c5a77c]">
-          © {new Date().getFullYear()} Harish Reddy Sweets. All rights reserved.
+          © 2026 Harish Reddy Sweets. All rights reserved.
         </p>
       </motion.footer>
     </main>
