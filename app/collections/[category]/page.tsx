@@ -11,10 +11,15 @@ import {
   Search,
   X,
 } from "lucide-react";
-import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import {
+  motion,
+  AnimatePresence,
+  useReducedMotion,
+} from "motion/react";
 import { products } from "@/lib/products";
 
 const productImages: Record<string, string> = {
+  // Specials
   "special-1": "/products/specials/specials-1.jpeg",
   "special-2": "/products/specials/specials-2.jpeg",
   "special-3": "/products/specials/specials-3.jpeg",
@@ -31,6 +36,7 @@ const productImages: Record<string, string> = {
   "special-14": "/products/specials/specials-14.jpeg",
   "special-15": "/products/specials/specials-15.jpeg",
 
+  // Ordinary
   "ordinary-1": "/products/ordinary/ordinary-1.jpeg",
   "ordinary-2": "/products/ordinary/ordinary-2.jpeg",
   "ordinary-3": "/products/ordinary/ordinary-3.jpeg",
@@ -54,17 +60,24 @@ const fallbackImage =
 const ease = [0.22, 1, 0.36, 1] as const;
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: {
+    opacity: 0,
+    y: 30,
+  },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.75, ease },
+    transition: {
+      duration: 0.75,
+      ease,
+    },
   },
 };
 
 function CollectionContent() {
   const params = useParams();
   const category = String(params.category || "").toLowerCase();
+
   const reduceMotion = useReducedMotion();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -125,9 +138,11 @@ function CollectionContent() {
   return (
     <main className="min-h-screen overflow-hidden bg-[#f8f3e9]">
 
-      {/* HERO */}
+      {/* HERO SECTION */}
 
       <section className="relative flex min-h-[430px] w-full flex-col items-center justify-center overflow-hidden bg-[#501522] px-6 py-16 text-center text-[#fff8e9] md:py-24">
+
+        {/* Animated Background */}
 
         <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-20">
           {!reduceMotion && (
@@ -164,20 +179,23 @@ function CollectionContent() {
         </div>
 
         <motion.div
-          className="relative mx-auto flex w-full max-w-4xl flex-col items-center"
+          className="relative mx-auto flex w-full max-w-4xl flex-col items-center justify-center text-center"
           initial="hidden"
           animate="visible"
           variants={{
             hidden: {},
             visible: {
-              transition: { staggerChildren: 0.15 },
+              transition: {
+                staggerChildren: 0.16,
+                delayChildren: 0.15,
+              },
             },
           }}
         >
           <motion.div variants={fadeUp}>
             <Link
               href="/"
-              className="mb-8 inline-flex items-center gap-2 text-sm text-[#e7c98e] transition duration-300 hover:-translate-x-1 hover:text-white"
+              className="mb-8 inline-flex items-center justify-center gap-2 text-sm text-[#e7c98e] transition duration-300 hover:-translate-x-1 hover:text-white"
             >
               <ArrowLeft size={17} />
               Back to Home
@@ -186,7 +204,7 @@ function CollectionContent() {
 
           <motion.div
             variants={fadeUp}
-            className="mb-5 flex items-center justify-center gap-2 text-sm tracking-[0.3em] text-[#d9b878]"
+            className="mb-5 flex w-full items-center justify-center gap-2 text-center text-sm tracking-[0.3em] text-[#d9b878]"
           >
             <Sparkles size={17} />
             HARISH REDDY SWEETS
@@ -195,19 +213,19 @@ function CollectionContent() {
 
           <motion.h1
             variants={fadeUp}
-            className="font-serif text-5xl font-bold md:text-7xl"
+            className="w-full text-center font-serif text-5xl font-bold md:text-7xl"
           >
             {selectedCategory}
           </motion.h1>
 
           <motion.div
             variants={fadeUp}
-            className="my-6 h-[2px] w-24 bg-[#d6ad65]"
+            className="mx-auto my-6 h-[2px] w-24 bg-[#d6ad65]"
           />
 
           <motion.p
             variants={fadeUp}
-            className="max-w-2xl text-base leading-8 text-[#f0dfc5] md:text-lg"
+            className="mx-auto w-full max-w-2xl text-center text-base leading-8 text-[#f0dfc5] md:text-lg"
           >
             Discover our carefully presented collection of traditional Indian
             sweets, made for every celebration and special moment.
@@ -215,23 +233,25 @@ function CollectionContent() {
 
           <motion.p
             variants={fadeUp}
-            className="mt-7 text-2xl font-semibold text-[#e7c98e]"
+            className="mt-7 w-full text-center text-2xl font-semibold text-[#e7c98e]"
           >
             ₹{categoryPrice} / kg
           </motion.p>
 
           <motion.p
             variants={fadeUp}
-            className="mt-2 text-xs tracking-[0.25em] text-[#e8d7bd]"
+            className="mt-2 w-full text-center text-xs tracking-[0.25em] text-[#e8d7bd]"
           >
             {categoryProducts.length} VARIETIES
           </motion.p>
         </motion.div>
       </section>
 
-      {/* PRODUCTS */}
+      {/* PRODUCTS SECTION */}
 
       <section className="mx-auto max-w-7xl px-5 py-14 md:px-8 md:py-20">
+
+        {/* SECTION HEADING */}
 
         <motion.div
           className="mb-10 text-center"
@@ -253,7 +273,7 @@ function CollectionContent() {
           </p>
         </motion.div>
 
-        {/* SEARCH */}
+        {/* SEARCH PRODUCTS */}
 
         <motion.div
           className="mx-auto mb-12 max-w-2xl text-center"
@@ -270,7 +290,8 @@ function CollectionContent() {
             Search Our {selectedCategory}
           </h3>
 
-          <div className="group flex items-center gap-3 rounded-full border border-[#d6ad65] bg-white px-5 py-4 shadow-[0_4px_18px_rgba(80,21,34,0.06)] transition duration-300 hover:shadow-[0_8px_25px_rgba(80,21,34,0.10)] focus-within:border-[#a77b3d]">
+          <div className="group flex items-center gap-3 rounded-full border border-[#d6ad65] bg-white px-5 py-4 shadow-[0_4px_18px_rgba(80,21,34,0.06)] transition duration-300 focus-within:border-[#a77b3d] focus-within:shadow-[0_5px_22px_rgba(80,21,34,0.12)] hover:shadow-[0_8px_25px_rgba(80,21,34,0.10)]">
+
             <Search
               size={21}
               className="shrink-0 text-[#a77b3d] transition-transform duration-300 group-focus-within:scale-110"
@@ -291,10 +312,11 @@ function CollectionContent() {
                   type="button"
                   onClick={() => setSearchTerm("")}
                   aria-label="Clear search"
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#927e68] hover:bg-[#f8f3e9]"
+                  initial={{ opacity: 0, scale: 0.5, rotate: -45 }}
+                  animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                  exit={{ opacity: 0, scale: 0.5, rotate: 45 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#927e68] transition hover:bg-[#f8f3e9] hover:text-[#501522]"
                 >
                   <X size={19} />
                 </motion.button>
@@ -309,7 +331,8 @@ function CollectionContent() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
-                className="mt-3 text-xs text-[#927e68]"
+                transition={{ duration: 0.2 }}
+                className="mt-3 text-xs tracking-wide text-[#927e68]"
               >
                 {filteredProducts.length}{" "}
                 {filteredProducts.length === 1 ? "sweet" : "sweets"} found
@@ -318,15 +341,27 @@ function CollectionContent() {
           </AnimatePresence>
         </motion.div>
 
-        {/* PRODUCT GRID */}
+        {/* PRODUCT RESULTS */}
 
-        {filteredProducts.length === 0 ? (
-          <motion.div
-            className="py-16 text-center"
+        {categoryProducts.length === 0 ? (
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
+            className="py-16 text-center text-[#76665a]"
           >
-            <Search size={35} className="mx-auto mb-4 text-[#b49a77]" />
+            No products found in this collection.
+          </motion.p>
+        ) : filteredProducts.length === 0 ? (
+          <motion.div
+            className="py-16 text-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, ease }}
+          >
+            <Search
+              size={35}
+              className="mx-auto mb-4 text-[#b49a77]"
+            />
 
             <h3 className="font-serif text-xl font-bold text-[#501522]">
               No Products Found
@@ -339,7 +374,7 @@ function CollectionContent() {
             <button
               type="button"
               onClick={() => setSearchTerm("")}
-              className="mt-5 rounded-full bg-[#501522] px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-1 hover:bg-[#681d2d]"
+              className="mt-5 rounded-full bg-[#501522] px-6 py-3 text-sm font-semibold text-white transition duration-300 hover:-translate-y-1 hover:bg-[#681d2d] hover:shadow-lg"
             >
               Clear Search
             </button>
@@ -363,27 +398,45 @@ function CollectionContent() {
                     initial={
                       reduceMotion
                         ? false
-                        : { opacity: 0, y: 35, scale: 0.96 }
+                        : {
+                            opacity: 0,
+                            y: 70,
+                            scale: 0.92,
+                          }
                     }
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 18, scale: 0.97 }}
+                    whileInView={{
+                      opacity: 1,
+                      y: 0,
+                      scale: 1,
+                    }}
+                    viewport={{
+                      once: true,
+                      amount: 0.15,
+                    }}
+                    exit={{
+                      opacity: 0,
+                      y: 20,
+                      scale: 0.95,
+                    }}
                     transition={{
-                      duration: reduceMotion ? 0.01 : 0.55,
-                      delay: reduceMotion ? 0 : Math.min(index * 0.055, 0.4),
+                      duration: reduceMotion ? 0.01 : 0.8,
+                      delay: reduceMotion ? 0 : (index % 4) * 0.12,
                       ease,
-                      layout: { duration: 0.35 },
+                      layout: {
+                        duration: 0.4,
+                      },
                     }}
                     whileHover={
                       reduceMotion
                         ? undefined
                         : {
-                            y: -8,
-                            transition: { duration: 0.3, ease },
+                            y: -9,
                           }
                     }
-                    className="group overflow-hidden rounded-2xl border border-[#e9ddc9] bg-white shadow-sm transition-all duration-500 hover:border-[#d6ad65] hover:shadow-[0_18px_40px_rgba(80,21,34,0.14)]"
+                    className="group overflow-hidden rounded-2xl border border-[#e9ddc9] bg-white shadow-sm transition-all duration-500 hover:border-[#d6ad65] hover:shadow-[0_18px_40px_rgba(80,21,34,0.16)]"
                   >
-                    {/* ANIMATED PRODUCT PHOTO */}
+
+                    {/* ANIMATED PRODUCT IMAGE */}
 
                     <div className="relative h-64 overflow-hidden bg-[#eee4d5]">
 
@@ -394,39 +447,55 @@ function CollectionContent() {
                         initial={
                           reduceMotion
                             ? false
-                            : { opacity: 0, scale: 1.12 }
+                            : {
+                                opacity: 0,
+                                scale: 1.2,
+                              }
                         }
-                        animate={{ opacity: 1, scale: 1 }}
-                        whileHover={
-                          reduceMotion
-                            ? undefined
-                            : { scale: 1.12 }
-                        }
+                        whileInView={{
+                          opacity: 1,
+                          scale: 1,
+                        }}
+                        viewport={{
+                          once: true,
+                          amount: 0.3,
+                        }}
                         transition={{
-                          duration: reduceMotion ? 0.01 : 1,
+                          duration: reduceMotion ? 0.01 : 1.1,
                           ease,
                         }}
-                        className="h-full w-full object-cover"
+                        className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                       />
 
-                      {/* Subtle photo overlay */}
+                      {/* IMAGE OVERLAY */}
 
-                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#260710]/25 via-transparent to-transparent opacity-60 transition-opacity duration-500 group-hover:opacity-20" />
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#260710]/30 via-transparent to-transparent opacity-60 transition-opacity duration-500 group-hover:opacity-20" />
 
-                      {/* GOLD IMAGE FRAME */}
+                      {/* GOLD FRAME */}
 
-                      <motion.div
-                        className="pointer-events-none absolute inset-3 rounded-xl border border-[#f3d99e]/0 transition-all duration-500 group-hover:border-[#f3d99e]/90"
-                      />
+                      <div className="pointer-events-none absolute inset-3 rounded-xl border border-transparent transition-all duration-500 group-hover:border-[#f3d99e]" />
 
                       {/* CATEGORY BADGE */}
 
                       <motion.div
-                        initial={reduceMotion ? false : { opacity: 0, x: -12 }}
-                        animate={{ opacity: 1, x: 0 }}
+                        initial={
+                          reduceMotion
+                            ? false
+                            : {
+                                opacity: 0,
+                                x: -15,
+                              }
+                        }
+                        whileInView={{
+                          opacity: 1,
+                          x: 0,
+                        }}
+                        viewport={{
+                          once: true,
+                        }}
                         transition={{
-                          duration: 0.45,
-                          delay: reduceMotion ? 0 : Math.min(index * 0.055, 0.4) + 0.15,
+                          duration: 0.5,
+                          delay: reduceMotion ? 0 : (index % 4) * 0.12 + 0.2,
                         }}
                         className="absolute left-4 top-4 rounded-full bg-[#501522]/95 px-4 py-2 text-xs font-semibold tracking-wider text-[#f7dfac] shadow-md backdrop-blur-sm"
                       >
@@ -434,12 +503,34 @@ function CollectionContent() {
                       </motion.div>
                     </div>
 
-                    {/* PRODUCT INFORMATION */}
+                    {/* PRODUCT DETAILS */}
 
                     <div className="p-5">
-                      <h3 className="font-serif text-xl font-bold text-[#501522] transition-colors duration-300 group-hover:text-[#a77b3d]">
+
+                      <motion.h3
+                        initial={
+                          reduceMotion
+                            ? false
+                            : {
+                                opacity: 0,
+                                y: 15,
+                              }
+                        }
+                        whileInView={{
+                          opacity: 1,
+                          y: 0,
+                        }}
+                        viewport={{
+                          once: true,
+                        }}
+                        transition={{
+                          duration: 0.6,
+                          delay: reduceMotion ? 0 : 0.15,
+                        }}
+                        className="font-serif text-xl font-bold text-[#501522] transition-colors duration-300 group-hover:text-[#a77b3d]"
+                      >
                         {product.name}
-                      </h3>
+                      </motion.h3>
 
                       <p className="mt-2 min-h-[42px] text-sm leading-6 text-[#786b60]">
                         {product.description}
@@ -454,10 +545,26 @@ function CollectionContent() {
                           </p>
 
                           <motion.p
-                            className="mt-1 text-2xl font-bold text-[#a77b3d]"
-                            whileHover={
-                              reduceMotion ? undefined : { scale: 1.04 }
+                            initial={
+                              reduceMotion
+                                ? false
+                                : {
+                                    opacity: 0,
+                                    y: 12,
+                                  }
                             }
+                            whileInView={{
+                              opacity: 1,
+                              y: 0,
+                            }}
+                            viewport={{
+                              once: true,
+                            }}
+                            transition={{
+                              duration: 0.6,
+                              delay: reduceMotion ? 0 : 0.25,
+                            }}
+                            className="mt-1 text-2xl font-bold text-[#a77b3d]"
                           >
                             ₹{product.price}
                             <span className="text-sm font-medium text-[#76665a]">
@@ -467,7 +574,7 @@ function CollectionContent() {
                         </div>
                       </div>
 
-                      {/* WHATSAPP */}
+                      {/* WHATSAPP BUTTON */}
 
                       <motion.a
                         href={whatsappOrder(product.name)}
@@ -476,11 +583,22 @@ function CollectionContent() {
                         whileHover={
                           reduceMotion
                             ? undefined
-                            : { scale: 1.035, y: -2 }
+                            : {
+                                scale: 1.035,
+                                y: -2,
+                              }
                         }
-                        whileTap={reduceMotion ? undefined : { scale: 0.97 }}
-                        transition={{ duration: 0.25 }}
-                        className="mt-5 flex w-full items-center justify-center gap-2 rounded-full border-2 border-[#D4AF37] bg-[#FFF3D6] px-5 py-3.5 text-sm font-bold text-[#501522] shadow-sm transition-colors duration-300 hover:bg-[#D4AF37]"
+                        whileTap={
+                          reduceMotion
+                            ? undefined
+                            : {
+                                scale: 0.97,
+                              }
+                        }
+                        transition={{
+                          duration: 0.25,
+                        }}
+                        className="mt-5 flex w-full items-center justify-center gap-2 rounded-full border-2 border-[#D4AF37] bg-[#FFF3D6] px-5 py-3.5 text-sm font-bold text-[#501522] shadow-sm transition-colors duration-300 hover:bg-[#D4AF37] hover:text-[#501522]"
                       >
                         <MessageCircle size={18} />
                         Order on WhatsApp
@@ -498,10 +616,19 @@ function CollectionContent() {
 
       <motion.footer
         className="bg-[#501522] px-6 py-10 text-center text-[#f5e8d2]"
-        initial={reduceMotion ? false : { opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{ duration: 0.8, ease }}
+        initial={reduceMotion ? false : { opacity: 0, y: 35 }}
+        whileInView={{
+          opacity: 1,
+          y: 0,
+        }}
+        viewport={{
+          once: true,
+          amount: 0.15,
+        }}
+        transition={{
+          duration: 0.8,
+          ease,
+        }}
       >
         <h2 className="font-serif text-2xl font-bold tracking-wider text-white">
           HARISH REDDY SWEETS
