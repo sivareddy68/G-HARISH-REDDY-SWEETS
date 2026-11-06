@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import type { FormEvent, ReactNode } from "react";
 import Link from "next/link";
 
@@ -51,6 +51,718 @@ const images = {
   festive:
     "https://lynkfoods.com/cdn/shop/collections/lynk-bundles-hero.png?v=1776495738",
 };
+
+/* =========================================
+   KAJU KATLI BRAND INTRO
+========================================= */
+
+
+function SweetIntro() {
+  const [visible, setVisible] = useState(true);
+  const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setVisible(false);
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setVisible(false);
+    }, 8500);
+
+    return () => window.clearTimeout(timer);
+  }, [reduceMotion]);
+
+  const sweets = [
+    { left: "15%", top: "57%", rotate: -12, delay: 1.0 },
+    { left: "32%", top: "43%", rotate: 8, delay: 1.25 },
+    { left: "49%", top: "56%", rotate: -7, delay: 1.5 },
+    { left: "67%", top: "43%", rotate: 13, delay: 1.75 },
+    { left: "78%", top: "59%", rotate: -10, delay: 2.0 },
+    { left: "38%", top: "69%", rotate: 10, delay: 2.2 },
+    { left: "59%", top: "72%", rotate: -5, delay: 2.4 },
+  ];
+
+  return (
+    <AnimatePresence>
+      {visible && (
+        <motion.section
+          key="sweet-intro"
+          initial={{ opacity: 1 }}
+          exit={{
+            opacity: 0,
+            scale: 1.04,
+            transition: { duration: 1 },
+          }}
+          aria-label="Welcome to G Harish Reddy Sweets"
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 99999,
+            overflow: "hidden",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background:
+              "radial-gradient(ellipse at center, #64202c 0%, #350b15 58%, #20050c 100%)",
+            color: "#e6cf98",
+          }}
+        >
+          {/* GOLDEN BACKGROUND LIGHT */}
+
+          <motion.div
+            animate={
+              reduceMotion
+                ? {}
+                : {
+                    opacity: [0.2, 0.5, 0.2],
+                    scale: [1, 1.2, 1],
+                  }
+            }
+            transition={{ duration: 5, repeat: Infinity }}
+            style={{
+              position: "absolute",
+              width: "70vw",
+              height: "70vw",
+              maxWidth: 650,
+              maxHeight: 650,
+              borderRadius: "50%",
+              background:
+                "radial-gradient(circle, rgba(220,165,75,.25), transparent 68%)",
+              filter: "blur(25px)",
+            }}
+          />
+
+          {/* FLOATING GOLD PARTICLES */}
+
+          {[...Array(20)].map((_, i) => (
+            <motion.span
+              key={i}
+              initial={{ opacity: 0, y: 30 }}
+              animate={
+                reduceMotion
+                  ? { opacity: 0 }
+                  : {
+                      opacity: [0, 0.8, 0],
+                      y: [-20, -130 - (i % 5) * 25],
+                      x: [0, i % 2 ? 35 : -35],
+                    }
+              }
+              transition={{
+                duration: 3 + (i % 3),
+                delay: 1 + i * 0.12,
+                repeat: Infinity,
+              }}
+              style={{
+                position: "absolute",
+                left: `${5 + ((i * 17) % 90)}%`,
+                top: `${45 + ((i * 13) % 45)}%`,
+                width: i % 3 === 0 ? 5 : 3,
+                height: i % 3 === 0 ? 5 : 3,
+                borderRadius: "50%",
+                background: "#e6cf98",
+                boxShadow: "0 0 12px #d9a94f",
+              }}
+            />
+          ))}
+
+          {/* MAIN CONTENT */}
+
+          <div
+            style={{
+              position: "relative",
+              zIndex: 2,
+              width: "100%",
+              maxWidth: 900,
+              padding: "25px 15px",
+              textAlign: "center",
+            }}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.3 }}
+              style={{
+                fontSize: 11,
+                letterSpacing: "5px",
+                marginBottom: 8,
+                color: "#e6cf98",
+              }}
+            >
+              A LEGACY OF SWEETNESS
+            </motion.div>
+
+            {/* SWEET MAKING SCENE */}
+
+            <div
+              style={{
+                position: "relative",
+                width: "100%",
+                maxWidth: 620,
+                height: "min(48vw, 350px)",
+                minHeight: 250,
+                margin: "0 auto",
+              }}
+            >
+              {/* DECORATIVE SERVING PLATE */}
+
+              <motion.div
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1.2, delay: 0.4 }}
+                style={{
+                  position: "absolute",
+                  left: "8%",
+                  bottom: "2%",
+                  width: "84%",
+                  height: "38%",
+                  borderRadius: "50%",
+                  background:
+                    "radial-gradient(ellipse, #571923 0%, #3b0d16 65%, #c39a59 67%, #f1d795 70%, #6a3034 73%, #3b1019 76%)",
+                  boxShadow:
+                    "0 25px 55px rgba(0,0,0,.55), inset 0 5px 15px rgba(255,255,255,.15)",
+                }}
+              />
+
+              {/* REALISTIC-STYLE KAJU KATLI */}
+
+              {sweets.map((sweet, i) => (
+                <motion.div
+                  key={i}
+                  initial={{
+                    opacity: 0,
+                    y: -100,
+                    rotate: sweet.rotate - 25,
+                    scale: 0.6,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                    rotate: sweet.rotate,
+                    scale: 1,
+                  }}
+                  transition={{
+                    duration: 1.1,
+                    delay: sweet.delay,
+                    ease: "easeOut",
+                  }}
+                  style={{
+                    position: "absolute",
+                    left: sweet.left,
+                    top: sweet.top,
+                    width: "clamp(58px, 11vw, 91px)",
+                    aspectRatio: "1 / 0.85",
+                    filter:
+                      "drop-shadow(0 12px 8px rgba(0,0,0,.48))",
+                  }}
+                >
+                  <svg
+                    viewBox="0 0 120 100"
+                    width="100%"
+                    height="100%"
+                    style={{ overflow: "visible" }}
+                  >
+                    <defs>
+                      <linearGradient
+                        id={`kaju-base-${i}`}
+                        x1="0%"
+                        y1="0%"
+                        x2="100%"
+                        y2="100%"
+                      >
+                        <stop offset="0%" stopColor="#fff9e9" />
+                        <stop offset="45%" stopColor="#e8d7b7" />
+                        <stop offset="100%" stopColor="#b99465" />
+                      </linearGradient>
+
+                      <linearGradient
+                        id={`kaju-top-${i}`}
+                        x1="10%"
+                        y1="0%"
+                        x2="85%"
+                        y2="100%"
+                      >
+                        <stop offset="0%" stopColor="#fff9e9" />
+                        <stop offset="28%" stopColor="#f2e5c9" />
+                        <stop offset="68%" stopColor="#e2cda7" />
+                        <stop offset="100%" stopColor="#c5a47b" />
+                      </linearGradient>
+
+                      <linearGradient
+                        id={`kaju-silver-${i}`}
+                        x1="0%"
+                        y1="0%"
+                        x2="100%"
+                        y2="100%"
+                      >
+                        <stop offset="0%" stopColor="#ffffff" />
+                        <stop offset="30%" stopColor="#bcbdbb" />
+                        <stop offset="55%" stopColor="#fafafa" />
+                        <stop offset="80%" stopColor="#c3c4c2" />
+                        <stop offset="100%" stopColor="#ffffff" />
+                      </linearGradient>
+
+                      <linearGradient
+                        id={`kaju-side-${i}`}
+                        x1="0%"
+                        y1="0%"
+                        x2="0%"
+                        y2="100%"
+                      >
+                        <stop offset="0%" stopColor="#c4a77e" />
+                        <stop offset="100%" stopColor="#8d6744" />
+                      </linearGradient>
+                    </defs>
+
+                    {/* THIN CASHEW SWEET SIDE */}
+
+                    <path
+                      d="M60 8 Q63 6 67 9 L113 46 Q119 51 113 56 L65 94 Q60 98 55 94 L7 56 Q1 51 7 46 Z"
+                      fill={`url(#kaju-side-${i})`}
+                    />
+
+                    {/* MAIN SMOOTH KAJU KATLI SURFACE */}
+
+                    <path
+                      d="M60 3 Q63 1 67 4 L113 42 Q118 46 113 51 L65 88 Q60 92 55 88 L7 51 Q2 46 7 42 Z"
+                      fill={`url(#kaju-top-${i})`}
+                      stroke="#fff4d8"
+                      strokeWidth="1.5"
+                    />
+
+                    {/* NATURAL SURFACE LIGHT */}
+
+                    <path
+                      d="M60 9 L104 46 L60 80 L16 46 Z"
+                      fill="none"
+                      stroke="rgba(255,255,255,.30)"
+                      strokeWidth="1.5"
+                    />
+
+                    <path
+                      d="M19 43 Q36 25 57 13"
+                      fill="none"
+                      stroke="rgba(255,255,255,.58)"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                    />
+
+                    {/* IRREGULAR EDIBLE SILVER VARAK */}
+
+                    <path
+                      d="M54 15 L66 12 L72 19 L67 26 L78 31 L70 38 L60 34 L51 40 L45 32 L52 25 L47 20 Z"
+                      fill={`url(#kaju-silver-${i})`}
+                      stroke="#eeeeeb"
+                      strokeWidth=".7"
+                    />
+
+                    {/* SILVER LEAF TEXTURE */}
+
+                    <path
+                      d="M54 15 L61 24 L72 19 M61 24 L52 40 M61 24 L78 31 M61 24 L67 38"
+                      fill="none"
+                      stroke="rgba(255,255,255,.85)"
+                      strokeWidth="1"
+                    />
+
+                    <path
+                      d="M39 47 Q49 42 57 47"
+                      fill="none"
+                      stroke="rgba(255,255,255,.35)"
+                      strokeWidth="1.2"
+                    />
+                  </svg>
+                </motion.div>
+              ))}
+
+              {/* GHEE BOTTLE - TILTS FROM ITS MOUTH */}
+
+              <motion.div
+                initial={{
+                  opacity: 0,
+                  x: 80,
+                  y: -45,
+                  rotate: 0,
+                }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                  y: 0,
+                  rotate: reduceMotion
+                    ? 0
+                    : [0, 0, 62, 62, 0],
+                }}
+                transition={{
+                  opacity: {
+                    duration: 0.8,
+                    delay: 2.1,
+                  },
+                  x: {
+                    duration: 1.2,
+                    delay: 2.1,
+                    ease: "easeOut",
+                  },
+                  y: {
+                    duration: 1.2,
+                    delay: 2.1,
+                    ease: "easeOut",
+                  },
+                  rotate: {
+                    duration: 4.2,
+                    delay: 2.1,
+                    times: [0, 0.18, 0.38, 0.82, 1],
+                    ease: "easeInOut",
+                  },
+                }}
+                style={{
+                  position: "absolute",
+                  zIndex: 5,
+                  top: "-3%",
+                  left: "49%",
+                  width: "clamp(95px, 17vw, 145px)",
+                  transformOrigin: "50% 4%",
+                }}
+              >
+                <svg
+                  viewBox="0 0 180 230"
+                  width="100%"
+                  height="auto"
+                  style={{ display: "block" }}
+                >
+                  <defs>
+                    <linearGradient
+                      id="bottleGlass"
+                      x1="0%"
+                      y1="0%"
+                      x2="100%"
+                      y2="0%"
+                    >
+                      <stop offset="0%" stopColor="#75400d" />
+                      <stop offset="20%" stopColor="#e6a92e" />
+                      <stop offset="48%" stopColor="#fff0a0" />
+                      <stop offset="70%" stopColor="#d48a19" />
+                      <stop offset="100%" stopColor="#71400d" />
+                    </linearGradient>
+
+                    <linearGradient
+                      id="bottleGhee"
+                      x1="0%"
+                      y1="0%"
+                      x2="0%"
+                      y2="100%"
+                    >
+                      <stop offset="0%" stopColor="#fff3a4" />
+                      <stop offset="100%" stopColor="#bd7010" />
+                    </linearGradient>
+                  </defs>
+
+                  {/* BOTTLE BODY */}
+
+                  <path
+                    d="M47 66 Q35 70 35 90 L35 190 Q35 208 52 211 L126 211 Q145 208 145 190 L145 90 Q145 70 130 66 L119 55 L119 31 L60 31 L60 55 Z"
+                    fill="url(#bottleGlass)"
+                    stroke="#f5d18a"
+                    strokeWidth="3"
+                  />
+
+                  {/* GLASS HIGHLIGHT */}
+
+                  <path
+                    d="M47 88 Q43 95 43 111 L43 180"
+                    fill="none"
+                    stroke="rgba(255,255,255,.65)"
+                    strokeWidth="7"
+                    strokeLinecap="round"
+                  />
+
+                  {/* BOTTLE NECK */}
+
+                  <rect
+                    x="62"
+                    y="15"
+                    width="55"
+                    height="34"
+                    rx="7"
+                    fill="url(#bottleGlass)"
+                    stroke="#f5d18a"
+                    strokeWidth="2"
+                  />
+
+                  {/* OPEN MOUTH / RIM */}
+
+                  <rect
+                    x="58"
+                    y="7"
+                    width="63"
+                    height="12"
+                    rx="4"
+                    fill="#d69a36"
+                    stroke="#fff0b6"
+                    strokeWidth="2"
+                  />
+
+                  <ellipse
+                    cx="90"
+                    cy="12"
+                    rx="22"
+                    ry="3"
+                    fill="#70400e"
+                  />
+
+                  {/* LABEL */}
+
+                  <rect
+                    x="45"
+                    y="110"
+                    width="91"
+                    height="65"
+                    rx="5"
+                    fill="#4a101d"
+                    stroke="#e6cf98"
+                    strokeWidth="2"
+                  />
+
+                  <text
+                    x="90"
+                    y="134"
+                    textAnchor="middle"
+                    fill="#f3d99d"
+                    fontSize="12"
+                    fontWeight="bold"
+                    letterSpacing="2"
+                  >
+                    PURE
+                  </text>
+
+                  <text
+                    x="90"
+                    y="151"
+                    textAnchor="middle"
+                    fill="#fff0c5"
+                    fontSize="13"
+                    fontWeight="bold"
+                    letterSpacing="1"
+                  >
+                    GHEE
+                  </text>
+
+                  <path
+                    d="M61 160 H119"
+                    stroke="#e6cf98"
+                    strokeWidth="1"
+                  />
+
+                  <text
+                    x="90"
+                    y="169"
+                    textAnchor="middle"
+                    fill="#e6cf98"
+                    fontSize="6"
+                    letterSpacing="1"
+                  >
+                    TRADITIONAL
+                  </text>
+                </svg>
+              </motion.div>
+
+              {/* GHEE STREAM - STARTS AT BOTTLE MOUTH */}
+
+              <motion.div
+                initial={{
+                  opacity: 0,
+                  scaleY: 0,
+                }}
+                animate={
+                  reduceMotion
+                    ? { opacity: 0 }
+                    : {
+                        opacity: [0, 1, 1, 0],
+                        scaleY: [0, 1, 1, 0],
+                      }
+                }
+                transition={{
+                  duration: 3.3,
+                  delay: 3.8,
+                  times: [0, 0.12, 0.82, 1],
+                  ease: "easeInOut",
+                }}
+                style={{
+                  position: "absolute",
+                  zIndex: 4,
+                  top: "5%",
+                  left: "60.5%",
+                  width: 10,
+                  height: "59%",
+                  borderRadius: "50%",
+                  transformOrigin: "top center",
+                  background:
+                    "linear-gradient(90deg, #a45b0c 0%, #ffe99a 25%, #f5b62f 55%, #fff3b4 75%, #b76a0d 100%)",
+                  boxShadow:
+                    "0 0 9px rgba(255,193,58,.8), 0 0 20px rgba(255,193,58,.5)",
+                }}
+              />
+
+              {/* GHEE DROPLETS */}
+
+              {[0, 1, 2, 3].map((drop) => (
+                <motion.div
+                  key={drop}
+                  initial={{
+                    opacity: 0,
+                    y: 0,
+                    scale: 0.4,
+                  }}
+                  animate={
+                    reduceMotion
+                      ? { opacity: 0 }
+                      : {
+                          opacity: [0, 1, 1, 0],
+                          y: [0, 65, 135, 190],
+                          scale: [0.5, 1, 0.8, 0.3],
+                        }
+                  }
+                  transition={{
+                    duration: 1.7,
+                    delay: 4.0 + drop * 0.55,
+                    ease: "easeIn",
+                  }}
+                  style={{
+                    position: "absolute",
+                    zIndex: 6,
+                    top: "8%",
+                    left: `${60 + (drop % 2) * 1.5}%`,
+                    width: 10,
+                    height: 16,
+                    borderRadius: "50% 50% 65% 65%",
+                    background:
+                      "linear-gradient(135deg, #fff6bc, #f3b52f 60%, #a85d0b)",
+                    boxShadow: "0 0 12px #e9b34f",
+                  }}
+                />
+              ))}
+
+              {/* GHEE SHINE ON KAJU KATLI */}
+
+              <motion.div
+                initial={{ opacity: 0, scale: 0 }}
+                animate={
+                  reduceMotion
+                    ? { opacity: 0 }
+                    : {
+                        opacity: [0, 0.9, 0.5, 0],
+                        scale: [0.3, 1.5, 1, 0.3],
+                      }
+                }
+                transition={{
+                  duration: 2.5,
+                  delay: 5.1,
+                  ease: "easeOut",
+                }}
+                style={{
+                  position: "absolute",
+                  top: "60%",
+                  left: "52%",
+                  width: 65,
+                  height: 25,
+                  borderRadius: "50%",
+                  background:
+                    "radial-gradient(ellipse, rgba(255,239,155,.9), rgba(230,165,43,.2), transparent)",
+                  filter: "blur(5px)",
+                }}
+              />
+            </div>
+
+            {/* BRAND NAME */}
+
+            <motion.div
+              initial={{
+                opacity: 0,
+                y: 30,
+                filter: "blur(8px)",
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                filter: "blur(0px)",
+              }}
+              transition={{
+                duration: 1.2,
+                delay: 5.5,
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: "Georgia, serif",
+                  fontSize: "clamp(25px, 5vw, 48px)",
+                  letterSpacing: "4px",
+                  fontWeight: 600,
+                  textShadow: "0 3px 25px rgba(230,190,110,.35)",
+                }}
+              >
+                G HARISH REDDY
+              </div>
+
+              <div
+                style={{
+                  fontSize: 13,
+                  letterSpacing: "9px",
+                  marginTop: 8,
+                }}
+              >
+                SWEETS
+              </div>
+
+              <div
+                style={{
+                  width: 100,
+                  height: 1,
+                  background: "#c9a45c",
+                  margin: "18px auto",
+                }}
+              />
+
+              <p
+                style={{
+                  fontFamily: "Georgia, serif",
+                  fontStyle: "italic",
+                  fontSize: 15,
+                  color: "#f0dba9",
+                  letterSpacing: 1,
+                }}
+              >
+                A Legacy of Sweetness Since 1998
+              </p>
+            </motion.div>
+          </div>
+
+          {/* SKIP INTRO */}
+
+          <button
+            onClick={() => setVisible(false)}
+            style={{
+              position: "absolute",
+              bottom: 24,
+              right: 24,
+              zIndex: 10,
+              border: "1px solid rgba(230,207,152,.5)",
+              borderRadius: 30,
+              padding: "11px 20px",
+              color: "#f0dba9",
+              background: "rgba(255,255,255,.06)",
+              fontSize: 11,
+              letterSpacing: 2,
+              cursor: "pointer",
+            }}
+          >
+            SKIP INTRO →
+          </button>
+        </motion.section>
+      )}
+    </AnimatePresence>
+  );
+}
+
 
 /* =========================================
    ANIMATION CONFIGURATION
@@ -309,6 +1021,11 @@ Thank you!
 
   return (
     <main>
+      {/* =====================================
+          KAJU KATLI INTRO
+      ===================================== */}
+
+      <SweetIntro />
 
       {/* =====================================
           ANNOUNCEMENT
@@ -1373,7 +2090,6 @@ Thank you!
           © 2026 Harish Reddy Sweets. All rights reserved.
         </small>
       </motion.footer>
-
     </main>
   );
 }
